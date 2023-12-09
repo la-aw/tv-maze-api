@@ -1,6 +1,0 @@
- - Kan du beskrive noen av TV-Maze database tabeller?
-            ○ Hvordan henger disse tabellene sammen.
-            ○ Velg ut 3-4 tabeller
-      - Kan du gi et eksempel på hvordan man henter informasjon fra flere tabeller samtidig?
-      - Er det store mengder data i disse tabeller, ønsker man ikke å vise alt samtidig. Hvordan kan dette løses?
-            ○ Gi et eksemp
