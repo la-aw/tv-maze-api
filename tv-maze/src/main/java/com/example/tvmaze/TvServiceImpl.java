@@ -20,7 +20,6 @@ public class TvServiceImpl implements TvService {
     public String getShowById(int id) {
         Map <String, Object> mappedShow = mapSingleShow(BASE_URL + "shows/" + id);
         String showName = (String) mappedShow.get("name");
-
         return showName;
     }
 
