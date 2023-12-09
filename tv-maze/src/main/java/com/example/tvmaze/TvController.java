@@ -1,17 +1,14 @@
 package com.example.tvmaze;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.json.JsonParseException;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
+
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.example.tvmaze.Mapper.*;
 
 @Controller
 @RequestMapping("/tv-maze")
@@ -22,11 +19,8 @@ public class TvController {
     @GetMapping(value = "persons/{id}", produces = "application/json")
     public @ResponseBody String getPerson(@PathVariable int id) {
 
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(BASE_URL + "people/" + id, String.class);
-        JsonParser jsonParser = JsonParserFactory.getJsonParser();
-        Map <String, Object> jsonMap = jsonParser.parseMap(response);
-        String personName = (String) jsonMap.get("name");
+        Map <String, Object> mappedShow = mapSingleShow(BASE_URL + "people/" + id);
+        String personName = (String) mappedShow.get("name");
 
         return personName;
     }
@@ -34,11 +28,8 @@ public class TvController {
     @GetMapping(value = "shows/{id}", produces = "application/json")
     public @ResponseBody String getShowById(@PathVariable int id) {
 
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(BASE_URL + "shows/" + id, String.class);
-        JsonParser jsonParser = JsonParserFactory.getJsonParser();
-        Map <String, Object> jsonMap = jsonParser.parseMap(response);
-        String showName = (String) jsonMap.get("name");
+        Map <String, Object> mappedShow = mapSingleShow(BASE_URL + "shows/" + id);
+        String showName = (String) mappedShow.get("name");
 
         return showName;
     }
@@ -46,42 +37,56 @@ public class TvController {
     @GetMapping(value = "shows", produces = "application/json")
     public @ResponseBody List<String> getShows() {
 
-        ArrayList<String> showsByRating = new ArrayList<>();
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(BASE_URL + "shows", String.class);
-        JsonParser showParser = JsonParserFactory.getJsonParser();
-        List<Object> jsonList = showParser.parseList(response);
-
-        jsonList.forEach(show -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String mappedData;
-            try {
-                mappedData = objectMapper.writeValueAsString(show);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-            Map <String, Object> jsonMap = showParser.parseMap(mappedData);
-            String showName = (String) jsonMap.get("name");
-                showsByRating.add(showName);
-
+        ArrayList<String> shows = new ArrayList<>();
+        mapListOfShows(BASE_URL + "shows").forEach(show -> {
+            Map<String, Object> mappedShow = mapShowFromList(show);
+            String showName = (String) mappedShow.get("name");
+                shows.add(showName);
         });
 
-        return showsByRating;
+        return shows;
     }
 
    @GetMapping(value = "shows/popular", produces = "application/json")
-    public @ResponseBody List<String> getShowsByRating() {
+    public @ResponseBody ArrayList<Show> getShowsByRating() {
+       ArrayList<Show> shows = new ArrayList<>();
+       mapListOfShows(BASE_URL + "shows").forEach(show -> {
+           Map<String, Object> mappedShow = mapShowFromList(show);
+           String showName = (String) mappedShow.get("name");
+           Map averageRating  = (Map) mappedShow.get("rating");
+           ArrayList<String> genres  = (ArrayList<String>) mappedShow.get("genres");
+           Number averageRatingNumber = (Number) averageRating.get("average");
+           if(averageRatingNumber != null) {
+               Show s = new Show(showName, averageRatingNumber.doubleValue(), genres);
+               shows.add(s);
+           }
+       });
+       shows.sort((Show o1, Show o2)-> Double.compare(o2.getRating(), o1.getRating()));
+       return shows;
 
-        ArrayList<String> showsByRating = new ArrayList<>();
-
-        return showsByRating;
     }
 
+
     @GetMapping(value = "shows/genre", produces = "application/json")
-    public @ResponseBody List<String> getShowsByGenre(@RequestParam String genre) {
+    public @ResponseBody List<Show> getShowsByGenre(@RequestParam String genre) {
 
-        ArrayList<String> showsByGenre = new ArrayList<>();
+        ArrayList<Show> showsByGenre = new ArrayList<>();
+        mapListOfShows(BASE_URL + "shows").forEach(show -> {
+            Map<String, Object> mappedShow = mapShowFromList(show);
+            String showName = (String) mappedShow.get("name");
+            Map averageRating  = (Map) mappedShow.get("rating");
+            ArrayList<String> genres  = (ArrayList<String>) mappedShow.get("genres");
+            Number averageRatingNumber = (Number) averageRating.get("average");
 
+            List<String> lowerCaseList = new ArrayList<>();
+            genres.forEach(str -> lowerCaseList.add(str.toLowerCase()));
+            if(averageRatingNumber != null) {
+                if (lowerCaseList.contains(genre)) {
+                    Show s = new Show(showName, averageRatingNumber.doubleValue(), genres);
+                    showsByGenre.add(s);
+                }
+            }
+        });
         return showsByGenre;
     }
 
