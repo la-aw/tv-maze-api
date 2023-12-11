@@ -21,9 +21,8 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Get the API key and secret from request headers
         String requestApiKey = request.getHeader("X-API-KEY");
-        // Validate the key and secret
+        // Validate the key
         if (apiKey.equals(requestApiKey)) {
             // Continue processing the request
             filterChain.doFilter(request, response);
