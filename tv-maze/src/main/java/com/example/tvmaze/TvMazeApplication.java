@@ -12,17 +12,4 @@ public class TvMazeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TvMazeApplication.class, args);
 	}
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/tv-maze/**")
-						.allowedOrigins("https://localhost:8080")
-						.allowedMethods("GET")
-						.allowedHeaders("*")
-						.allowCredentials(true);
-			}
-		};
-	}
 }

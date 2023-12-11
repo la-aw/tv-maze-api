@@ -3,7 +3,7 @@ package com.example.tvmaze.Controller;
 
 import com.example.tvmaze.Service.TvServiceImpl;
 import com.example.tvmaze.Dto.Show;
-import jakarta.validation.constraints.Positive;
+/*import jakarta.validation.constraints.Positive;*/
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +20,12 @@ public class TvController {
     TvServiceImpl tvServiceImpl = new TvServiceImpl();
 
     @GetMapping(value = "persons/{id}", produces = "application/json")
-    public @ResponseBody String getPerson(@PathVariable @Positive Integer id) {
+    public @ResponseBody String getPerson(@PathVariable /*@Positive*/ Integer id) {
         return tvServiceImpl.getPerson(id);
     }
 
     @GetMapping(value = "shows/{id}", produces = "application/json")
-    public @ResponseBody String getShowById(@PathVariable  @Positive Integer id) { return tvServiceImpl.getShowById(id); }
+    public @ResponseBody String getShowById(@PathVariable  /*@Positive*/ Integer id) { return tvServiceImpl.getShowById(id); }
 
     @GetMapping(value = "shows", produces = "application/json")
     public @ResponseBody List<String> getShows() {
