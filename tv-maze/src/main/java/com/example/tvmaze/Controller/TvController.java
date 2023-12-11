@@ -1,6 +1,8 @@
-package com.example.tvmaze;
+package com.example.tvmaze.Controller;
 
 
+import com.example.tvmaze.Service.TvServiceImpl;
+import com.example.tvmaze.Dto.Show;
 import jakarta.validation.constraints.Positive;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;

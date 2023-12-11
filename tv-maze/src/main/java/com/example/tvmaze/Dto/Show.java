@@ -1,4 +1,4 @@
-package com.example.tvmaze;
+package com.example.tvmaze.Dto;
 
 import com.fasterxml.jackson.annotation.JsonTypeId;
 import org.springframework.util.IdGenerator;

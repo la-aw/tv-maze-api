@@ -1,10 +1,12 @@
-package com.example.tvmaze;
+package com.example.tvmaze.Service;
+
+import com.example.tvmaze.Dto.Show;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.tvmaze.Mapper.*;
+import static com.example.tvmaze.Mapper.Mapper.*;
 
 public class TvServiceImpl implements TvService {
 

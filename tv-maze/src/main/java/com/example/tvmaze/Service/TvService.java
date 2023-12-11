@@ -1,8 +1,6 @@
-package com.example.tvmaze;
+package com.example.tvmaze.Service;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.example.tvmaze.Dto.Show;
 
 import java.util.ArrayList;
 import java.util.List;
